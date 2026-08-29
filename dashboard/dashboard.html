@@ -1,0 +1,2722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Intelligence Platform</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050b18;
+            --panel: #0c1629;
+            --panel2: #101c31;
+            --border: #223653;
+            --text: #eef4ff;
+            --muted: #94a6bf;
+            --cyan: #20d8ff;
+            --purple: #a784ff;
+            --green: #38dfa1;
+            --orange: #ff9b38;
+            --red: #ff6b6b;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, rgba(0, 160, 255, 0.14), transparent 35%),
+                radial-gradient(circle at 90% 10%, rgba(125, 70, 255, 0.13), transparent 35%),
+                linear-gradient(135deg, #061426 0%, #060b18 55%, #110b25 100%);
+        }
+
+        .container {
+            width: min(1400px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 42px 0 80px;
+        }
+
+        h1, h2, h3, h4 {
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: clamp(38px, 5vw, 64px);
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 18px;
+            margin-bottom: 22px;
+        }
+
+        .hero {
+            margin-bottom: 35px;
+        }
+
+        .hero-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hero-icon {
+            font-size: 48px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid rgba(56, 223, 161, 0.45);
+            background: rgba(56, 223, 161, 0.08);
+            color: var(--green);
+            padding: 10px 17px;
+            border-radius: 999px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-pill.error {
+            color: var(--red);
+            border-color: rgba(255, 107, 107, 0.4);
+            background: rgba(255, 107, 107, 0.08);
+        }
+
+        .alert {
+            display: none;
+            margin: 25px 0;
+            padding: 15px 18px;
+            border: 1px solid rgba(255, 155, 56, 0.45);
+            background: rgba(255, 155, 56, 0.08);
+            color: #ffd39e;
+            border-radius: 12px;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .section {
+            margin-top: 42px;
+        }
+
+        .section-description {
+            color: var(--muted);
+            margin-top: -2px;
+            margin-bottom: 22px;
+        }
+
+        /* =========================
+           STAT CARDS
+           ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 135px;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(13, 24, 43, 0.88);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            right: -25px;
+            top: -35px;
+            border-radius: 50%;
+            background: rgba(32, 216, 255, 0.07);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 35px;
+            font-weight: 800;
+            margin-top: 18px;
+        }
+
+        .cyan {
+            color: var(--cyan);
+        }
+
+        .purple {
+            color: var(--purple);
+        }
+
+        .green {
+            color: var(--green);
+        }
+
+        .orange {
+            color: var(--orange);
+        }
+
+        /* =========================
+           PANELS
+           ========================= */
+
+        .panel {
+            background: rgba(12, 22, 41, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            border: 1px solid #29405f;
+            border-radius: 9px;
+            background: #071121;
+            color: var(--text);
+            padding: 12px 13px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 2px rgba(32,216,255,0.08);
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .spec {
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #081324;
+            padding: 15px;
+            min-height: 75px;
+        }
+
+        .spec-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .spec-value {
+            font-size: 17px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        /* =========================
+           COMPARISON
+           ========================= */
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .comparison-card {
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: #081324;
+            padding: 18px;
+        }
+
+        .comparison-card h4 {
+            color: var(--cyan);
+            margin-bottom: 18px;
+            font-size: 18px;
+        }
+
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            border-bottom: 1px solid rgba(148,166,191,0.12);
+            padding: 11px 0;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-row span {
+            color: var(--muted);
+        }
+
+        .comparison-row strong {
+            text-align: right;
+        }
+
+        /* =========================
+           TABLE
+           ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 13px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(148,166,191,0.1);
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--muted);
+            background: #081324;
+            font-size: 13px;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            color: #dce7f8;
+        }
+
+        tr:hover td {
+            background: rgba(32,216,255,0.035);
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        /* =========================
+           ADOPTION
+           ========================= */
+
+        .adoption-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .adoption-card {
+            background: #081324;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .adoption-card .number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--cyan);
+            margin-top: 8px;
+        }
+
+        .adoption-card .label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           PRICE PREDICTION
+           ========================= */
+
+        .prediction-card {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #172554, #0f172a);
+            border: 1px solid #2563eb;
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 15px 50px rgba(37, 99, 235, 0.16);
+        }
+
+        .prediction-card h3 {
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .prediction-card > p {
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .prediction-form {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            border: 1px solid #29405f;
+            border-radius: 9px;
+            background: #071121;
+            color: var(--text);
+            padding: 12px 13px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 2px rgba(32,216,255,0.08);
+        }
+
+        .predict-button {
+            margin-top: 18px;
+            padding: 13px 22px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.30);
+        }
+
+        #predictionResult {
+            margin-top: 20px;
+            min-height: 34px;
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        /* =========================
+           LOADING
+           ========================= */
+
+        .loading {
+            color: var(--muted);
+            padding: 20px 0;
+        }
+
+        .empty {
+            color: var(--muted);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: rgba(32,216,255,0.09);
+            color: var(--cyan);
+            border: 1px solid rgba(32,216,255,0.2);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            color: #667a96;
+            padding: 45px 0 10px;
+            font-size: 13px;
+        }
+
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: min(100% - 24px, 1400px);
+                padding-top: 25px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .hero-icon {
+                font-size: 35px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .controls,
+            .comparison-grid,
+            .adoption-grid,
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .spec-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prediction-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- =========================
+         HEADER
+         ========================= -->
+
+    <header class="hero">
+        <div class="hero-title">
+            <div class="hero-icon">⚡</div>
+
+            <div>
+                <h1>EV Intelligence Platform</h1>
+                <div class="subtitle">
+                    Indian Electric Vehicle Market Intelligence &amp; Analytics
+                </div>
+            </div>
+        </div>
+
+        <div id="connectionStatus" class="status-pill">
+            <span class="status-dot"></span>
+            Connecting to Flask API...
+        </div>
+    </header>
+
+    <div id="alert" class="alert"></div>
+
+    <!-- =========================
+         PLATFORM OVERVIEW
+         ========================= -->
+
+    <section class="section">
+        <h2>Platform Overview</h2>
+
+        <div class="section-description">
+            Live information from your EV datasets and Flask API.
+        </div>
+
+        <div class="stats">
+
+            <div class="stat-card">
+                <div class="stat-label">EV Dataset Vehicles</div>
+                <div id="total4w" class="stat-value cyan">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">2-Wheeler Vehicles</div>
+                <div id="total2w" class="stat-value purple">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">3-Wheeler Vehicles</div>
+                <div id="total3w" class="stat-value green">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">States / UTs</div>
+                <div id="totalStates" class="stat-value orange">0</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================
+         VEHICLE INTELLIGENCE
+         ========================= -->
+
+    <section class="section">
+
+        <h2>🚗 Vehicle Intelligence</h2>
+
+        <div class="section-description">
+            Search and explore Indian EV specifications.
+        </div>
+
+        <div class="two-column">
+
+            <!-- VEHICLE SEARCH -->
+
+            <div class="panel">
+
+                <h3>Vehicle Search</h3>
+
+                <div class="controls">
+
+                    <div>
+                        <label for="vehicleType">
+                            Vehicle Type
+                        </label>
+
+                        <select id="vehicleType">
+                            <option value="4w">4-Wheeler</option>
+                            <option value="2w">2-Wheeler</option>
+                            <option value="3w">3-Wheeler</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="vehicleSelect">
+                            Vehicle
+                        </label>
+
+                        <select id="vehicleSelect">
+                            <option value="">Loading vehicles...</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div id="vehicleSpecs" class="spec-grid">
+
+                    <div class="spec">
+                        <div class="spec-label">Brand</div>
+                        <div id="specBrand" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Model</div>
+                        <div id="specModel" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Variant</div>
+                        <div id="specVariant" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Price</div>
+                        <div id="specPrice" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Battery</div>
+                        <div id="specBattery" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Range</div>
+                        <div id="specRange" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Power</div>
+                        <div id="specPower" class="spec-value">—</div>
+                    </div>
+
+                    <div class="spec">
+                        <div class="spec-label">Top Speed</div>
+                        <div id="specSpeed" class="spec-value">—</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- COMPARISON -->
+
+            <div class="panel">
+
+                <h3>Vehicle Comparison</h3>
+
+                <div class="controls">
+
+                    <div>
+                        <label for="compare1">
+                            Vehicle 1
+                        </label>
+
+                        <select id="compare1">
+                            <option value="">Select Vehicle</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="compare2">
+                            Vehicle 2
+                        </label>
+
+                        <select id="compare2">
+                            <option value="">Select Vehicle</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="comparison-grid">
+
+                    <div class="comparison-card">
+
+                        <h4 id="compareName1">
+                            Vehicle 1
+                        </h4>
+
+                        <div class="comparison-row">
+                            <span>Price</span>
+                            <strong id="comparePrice1">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Battery</span>
+                            <strong id="compareBattery1">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Range</span>
+                            <strong id="compareRange1">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Power</span>
+                            <strong id="comparePower1">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Top Speed</span>
+                            <strong id="compareSpeed1">—</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="comparison-card">
+
+                        <h4 id="compareName2">
+                            Vehicle 2
+                        </h4>
+
+                        <div class="comparison-row">
+                            <span>Price</span>
+                            <strong id="comparePrice2">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Battery</span>
+                            <strong id="compareBattery2">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Range</span>
+                            <strong id="compareRange2">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Power</span>
+                            <strong id="comparePower2">—</strong>
+                        </div>
+
+                        <div class="comparison-row">
+                            <span>Top Speed</span>
+                            <strong id="compareSpeed2">—</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================
+         PRICE PREDICTION
+         ========================= -->
+
+    <section class="section">
+        <h2>💰 EV Price Prediction</h2>
+        <div class="section-description">
+            Estimate the price of an Indian electric vehicle using the ML model or the built-in fallback estimator.
+        </div>
+
+        <div class="prediction-card">
+            <h3>Predict EV Price</h3>
+            <p>Enter the vehicle specifications below.</p>
+
+            <div class="prediction-form">
+                <div class="input-group">
+                    <label for="brand">Brand</label>
+                    <input type="text" id="brand" placeholder="e.g. Tata">
+                </div>
+
+                <div class="input-group">
+                    <label for="range">Range (km)</label>
+                    <input type="number" id="range" min="0" step="0.1" placeholder="e.g. 465">
+                </div>
+
+                <div class="input-group">
+                    <label for="power">Power (kW)</label>
+                    <input type="number" id="power" min="0" step="0.1" placeholder="e.g. 129">
+                </div>
+
+                <div class="input-group">
+                    <label for="battery">Battery (kWh)</label>
+                    <input type="number" id="battery" min="0" step="0.1" placeholder="e.g. 40">
+                </div>
+            </div>
+
+            <button class="predict-button" type="button" onclick="predictPrice()">
+                ⚡ Predict EV Price
+            </button>
+
+            <div id="predictionResult" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <!-- =========================
+         2W / 3W MARKET
+         ========================= -->
+
+    <section class="section">
+
+        <h2>🛵 2-Wheeler &amp; 🛺 3-Wheeler EV Market</h2>
+
+        <div class="section-description">
+            Explore the dedicated 2W and 3W EV dataset.
+        </div>
+
+        <div class="panel">
+
+            <div class="search-row">
+
+                <input
+                    id="smallVehicleSearch"
+                    type="text"
+                    placeholder="Search brand, model, variant..."
+                >
+
+                <select id="smallVehicleType">
+                    <option value="all">All Vehicles</option>
+                    <option value="2w">2-Wheelers</option>
+                    <option value="3w">3-Wheelers</option>
+                </select>
+
+            </div>
+
+            <div id="smallVehicleCount" class="badge">
+                Loading...
+            </div>
+
+            <br><br>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Variant</th>
+                            <th>Price (₹ Lakh)</th>
+                            <th>Battery (kWh)</th>
+                            <th>Range (km)</th>
+                            <th>Power (kW)</th>
+                            <th>Top Speed</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="smallVehicleTable">
+                        <tr>
+                            <td colspan="10" class="loading">
+                                Loading records...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         4W VEHICLE DATASET
+         ========================= -->
+
+    <section class="section">
+
+        <h2>🚙 EV Vehicle Dataset</h2>
+
+        <div class="section-description">
+            Search across the 7,292-record EV vehicle dataset.
+        </div>
+
+        <div class="panel">
+
+            <div class="search-row">
+
+                <input
+                    id="largeVehicleSearch"
+                    type="text"
+                    placeholder="Search make, model, variant..."
+                >
+
+                <select id="largeVehicleLimit">
+                    <option value="50">Show 50</option>
+                    <option value="100">Show 100</option>
+                    <option value="250">Show 250</option>
+                    <option value="500">Show 500</option>
+                </select>
+
+            </div>
+
+            <div id="largeVehicleCount" class="badge">
+                Loading...
+            </div>
+
+            <br><br>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Make / Brand</th>
+                            <th>Model</th>
+                            <th>Variant</th>
+                            <th>Price</th>
+                            <th>Battery</th>
+                            <th>Range</th>
+                            <th>Power</th>
+                            <th>Top Speed</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="largeVehicleTable">
+                        <tr>
+                            <td colspan="8" class="loading">
+                                Loading records...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         EV ADOPTION
+         ========================= -->
+
+    <section class="section">
+
+        <h2>📈 EV Adoption &amp; Market Analytics</h2>
+
+        <div class="section-description">
+            Information from the PM E-DRIVE and EV adoption datasets.
+        </div>
+
+        <div class="panel">
+
+            <div id="adoptionCards" class="adoption-grid">
+
+                <div class="adoption-card">
+                    <div class="label">Records</div>
+                    <div id="adoptionRecords" class="number">—</div>
+                </div>
+
+                <div class="adoption-card">
+                    <div class="label">States / Regions</div>
+                    <div id="adoptionRegions" class="number">—</div>
+                </div>
+
+                <div class="adoption-card">
+                    <div class="label">Latest Year</div>
+                    <div id="adoptionYear" class="number">—</div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead id="adoptionHead"></thead>
+
+                    <tbody id="adoptionTable">
+                        <tr>
+                            <td class="loading">
+                                Loading adoption data...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        EV Intelligence Platform · Flask API · Indian EV Market Analytics
+    </footer>
+
+</div>
+
+
+<script>
+/* ============================================================
+   EV INTELLIGENCE PLATFORM
+   FRONTEND
+   Backend runs on port 5050
+   ============================================================ */
+
+const API_BASE = "http://127.0.0.1:5050";
+
+let vehicles4W = [];
+let vehicles2W3W = [];
+let adoptionData = [];
+let summaryData = {};
+
+let currentVehicleList = [];
+
+
+/* ============================================================
+   BASIC HELPERS
+   ============================================================ */
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+function formatNumber(value) {
+    if (value === null || value === undefined || value === "") {
+        return "—";
+    }
+
+    const number = Number(value);
+
+    if (!Number.isNaN(number)) {
+        return number.toLocaleString("en-IN");
+    }
+
+    return String(value);
+}
+
+
+function formatValue(value, suffix = "") {
+    if (value === null || value === undefined || value === "") {
+        return "—";
+    }
+
+    return `${value}${suffix}`;
+}
+
+
+function firstValue(obj, keys, fallback = "") {
+
+    if (!obj || typeof obj !== "object") {
+        return fallback;
+    }
+
+    for (const key of keys) {
+
+        if (
+            Object.prototype.hasOwnProperty.call(obj, key) &&
+            obj[key] !== null &&
+            obj[key] !== undefined &&
+            obj[key] !== ""
+        ) {
+            return obj[key];
+        }
+    }
+
+    /* Case-insensitive fallback */
+
+    const objectKeys = Object.keys(obj);
+
+    for (const wanted of keys) {
+
+        const found = objectKeys.find(
+            k => k.toLowerCase() === wanted.toLowerCase()
+        );
+
+        if (
+            found &&
+            obj[found] !== null &&
+            obj[found] !== undefined &&
+            obj[found] !== ""
+        ) {
+            return obj[found];
+        }
+    }
+
+    return fallback;
+}
+
+
+/* ============================================================
+   IMPORTANT:
+   YOUR API RETURNS DICTIONARIES, NOT DIRECT ARRAYS.
+   This function safely extracts records from:
+   
+   {
+       "vehicles": [...]
+   }
+
+   or
+
+   {
+       "data": [...]
+   }
+
+   or
+
+   {
+       "results": [...]
+   }
+
+   or any nested dictionary containing an array.
+   ============================================================ */
+
+function extractRecords(payload) {
+
+    if (Array.isArray(payload)) {
+        return payload;
+    }
+
+    if (!payload || typeof payload !== "object") {
+        return [];
+    }
+
+    const preferredKeys = [
+        "vehicles",
+        "vehicle",
+        "data",
+        "results",
+        "records",
+        "items",
+        "rows",
+        "adoption",
+        "sales"
+    ];
+
+    for (const key of preferredKeys) {
+
+        if (Array.isArray(payload[key])) {
+            return payload[key];
+        }
+
+        if (
+            payload[key] &&
+            typeof payload[key] === "object"
+        ) {
+            const nested = extractRecords(payload[key]);
+
+            if (nested.length > 0) {
+                return nested;
+            }
+        }
+    }
+
+    /* Search every nested object */
+
+    for (const key of Object.keys(payload)) {
+
+        const value = payload[key];
+
+        if (Array.isArray(value)) {
+
+            if (
+                value.length === 0 ||
+                typeof value[0] === "object"
+            ) {
+                return value;
+            }
+        }
+
+        if (
+            value &&
+            typeof value === "object"
+        ) {
+
+            const nested = extractRecords(value);
+
+            if (nested.length > 0) {
+                return nested;
+            }
+        }
+    }
+
+    return [];
+}
+
+
+/* ============================================================
+   API
+   ============================================================ */
+
+async function apiFetch(endpoint) {
+
+    const response = await fetch(
+        `${API_BASE}${endpoint}`,
+        {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+                "Accept": "application/json"
+            }
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            `${endpoint} returned HTTP ${response.status}`
+        );
+    }
+
+    return await response.json();
+}
+
+
+/* ============================================================
+   CONNECTION STATUS
+   ============================================================ */
+
+function setConnected(message = "Flask API connected • Port 5050") {
+
+    const element =
+        document.getElementById("connectionStatus");
+
+    element.className = "status-pill";
+
+    element.innerHTML = `
+        <span class="status-dot"></span>
+        ${escapeHtml(message)}
+    `;
+}
+
+
+function setConnectionError(message) {
+
+    const element =
+        document.getElementById("connectionStatus");
+
+    element.className = "status-pill error";
+
+    element.innerHTML = `
+        <span class="status-dot"></span>
+        ${escapeHtml(message)}
+    `;
+}
+
+
+/* ============================================================
+   ALERT
+   ============================================================ */
+
+function showAlert(message) {
+
+    const alert =
+        document.getElementById("alert");
+
+    alert.textContent = message;
+    alert.classList.add("show");
+}
+
+
+function hideAlert() {
+
+    const alert =
+        document.getElementById("alert");
+
+    alert.classList.remove("show");
+}
+
+
+/* ============================================================
+   NORMALIZE VEHICLE
+   Works with both 4W and 2W/3W datasets.
+   ============================================================ */
+
+function normalizeVehicle(raw) {
+
+    const typeRaw = firstValue(
+        raw,
+        [
+            "vehicle_type",
+            "vehicleType",
+            "type",
+            "category",
+            "segment"
+        ],
+        ""
+    );
+
+    const typeText =
+        String(typeRaw).toLowerCase();
+
+    let vehicleType = "4w";
+
+    if (
+        typeText.includes("3") ||
+        typeText.includes("three")
+    ) {
+        vehicleType = "3w";
+    }
+    else if (
+        typeText.includes("2") ||
+        typeText.includes("two")
+    ) {
+        vehicleType = "2w";
+    }
+
+    return {
+
+        raw,
+
+        type: vehicleType,
+
+        typeLabel:
+            vehicleType === "2w"
+                ? "2-Wheeler"
+                : vehicleType === "3w"
+                    ? "3-Wheeler"
+                    : "4-Wheeler",
+
+        brand: firstValue(
+            raw,
+            [
+                "brand",
+                "make",
+                "manufacturer",
+                "company",
+                "Brand",
+                "Make"
+            ]
+        ),
+
+        model: firstValue(
+            raw,
+            [
+                "model",
+                "Model",
+                "vehicle_model",
+                "vehicle"
+            ]
+        ),
+
+        variant: firstValue(
+            raw,
+            [
+                "variant",
+                "Variant",
+                "version",
+                "trim"
+            ]
+        ),
+
+        price: firstValue(
+            raw,
+            [
+                "price_lakh_inr",
+                "price",
+                "price_inr",
+                "ex_showroom_price",
+                "Price",
+                "price_lakh"
+            ]
+        ),
+
+        battery: firstValue(
+            raw,
+            [
+                "battery_kwh",
+                "battery",
+                "battery_capacity",
+                "battery_capacity_kwh",
+                "Battery",
+                "battery_size"
+            ]
+        ),
+
+        range: firstValue(
+            raw,
+            [
+                "range_km",
+                "range",
+                "Range",
+                "range_kms",
+                "claimed_range"
+            ]
+        ),
+
+        power: firstValue(
+            raw,
+            [
+                "power_kw",
+                "power",
+                "Power",
+                "motor_power_kw",
+                "max_power"
+            ]
+        ),
+
+        speed: firstValue(
+            raw,
+            [
+                "top_speed_kmph",
+                "top_speed",
+                "Top Speed",
+                "max_speed",
+                "top_speed_km_h"
+            ]
+        ),
+
+        source: firstValue(
+            raw,
+            [
+                "source_type",
+                "source",
+                "Source",
+                "data_source"
+            ]
+        )
+    };
+}
+
+
+/* ============================================================
+   VEHICLE DISPLAY
+   ============================================================ */
+
+function displayVehicle(vehicle) {
+
+    if (!vehicle) {
+
+        const ids = [
+            "specBrand",
+            "specModel",
+            "specVariant",
+            "specPrice",
+            "specBattery",
+            "specRange",
+            "specPower",
+            "specSpeed"
+        ];
+
+        ids.forEach(id => {
+            document.getElementById(id).textContent = "—";
+        });
+
+        return;
+    }
+
+    document.getElementById("specBrand").textContent =
+        vehicle.brand || "—";
+
+    document.getElementById("specModel").textContent =
+        vehicle.model || "—";
+
+    document.getElementById("specVariant").textContent =
+        vehicle.variant || "—";
+
+    document.getElementById("specPrice").textContent =
+        vehicle.price !== ""
+            ? `${vehicle.price} Lakh`
+            : "—";
+
+    document.getElementById("specBattery").textContent =
+        vehicle.battery !== ""
+            ? `${vehicle.battery} kWh`
+            : "—";
+
+    document.getElementById("specRange").textContent =
+        vehicle.range !== ""
+            ? `${vehicle.range} km`
+            : "—";
+
+    document.getElementById("specPower").textContent =
+        vehicle.power !== ""
+            ? `${vehicle.power} kW`
+            : "—";
+
+    document.getElementById("specSpeed").textContent =
+        vehicle.speed !== ""
+            ? `${vehicle.speed} km/h`
+            : "—";
+}
+
+
+/* ============================================================
+   VEHICLE SELECT
+   ============================================================ */
+
+function vehicleDisplayName(vehicle) {
+
+    const parts = [
+        vehicle.brand,
+        vehicle.model,
+        vehicle.variant
+    ].filter(Boolean);
+
+    if (parts.length === 0) {
+        return "Unnamed vehicle";
+    }
+
+    return parts.join(" ");
+}
+
+
+function populateVehicleSelect() {
+
+    const select = document.getElementById("vehicleSelect");
+
+    select.innerHTML = `<option value="">Select vehicle</option>`;
+
+    const uniqueVehicles = [];
+    const seen = new Set();
+
+    currentVehicleList.forEach(vehicle => {
+        const key = [
+            vehicle.brand || "",
+            vehicle.model || "",
+            vehicle.variant || ""
+        ].join("|").toLowerCase().trim();
+
+        if (!key || seen.has(key)) {
+            return;
+        }
+
+        seen.add(key);
+        uniqueVehicles.push(vehicle);
+    });
+
+    currentVehicleList = uniqueVehicles;
+
+    currentVehicleList.forEach((vehicle, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = vehicleDisplayName(vehicle);
+        select.appendChild(option);
+    });
+
+    if (currentVehicleList.length > 0) {
+        select.value = "0";
+        displayVehicle(currentVehicleList[0]);
+    } else {
+        displayVehicle(null);
+    }
+}
+
+
+/* ============================================================
+   COMPARISON SELECTS
+   ============================================================ */
+
+function populateComparisonSelects() {
+
+    const select1 =
+        document.getElementById("compare1");
+
+    const select2 =
+        document.getElementById("compare2");
+
+    select1.innerHTML =
+        `<option value="">Select Vehicle</option>`;
+
+    select2.innerHTML =
+        `<option value="">Select Vehicle</option>`;
+
+    currentVehicleList.forEach(
+        (vehicle, index) => {
+
+            const name =
+                vehicleDisplayName(vehicle);
+
+            const option1 =
+                document.createElement("option");
+
+            option1.value = String(index);
+            option1.textContent = name;
+
+            const option2 =
+                document.createElement("option");
+
+            option2.value = String(index);
+            option2.textContent = name;
+
+            select1.appendChild(option1);
+            select2.appendChild(option2);
+        }
+    );
+}
+
+
+function setComparison(prefix, vehicle) {
+
+    if (!vehicle) {
+
+        document.getElementById(
+            `compareName${prefix}`
+        ).textContent = `Vehicle ${prefix}`;
+
+        document.getElementById(
+            `comparePrice${prefix}`
+        ).textContent = "—";
+
+        document.getElementById(
+            `compareBattery${prefix}`
+        ).textContent = "—";
+
+        document.getElementById(
+            `compareRange${prefix}`
+        ).textContent = "—";
+
+        document.getElementById(
+            `comparePower${prefix}`
+        ).textContent = "—";
+
+        document.getElementById(
+            `compareSpeed${prefix}`
+        ).textContent = "—";
+
+        return;
+    }
+
+    document.getElementById(
+        `compareName${prefix}`
+    ).textContent =
+        vehicleDisplayName(vehicle);
+
+    document.getElementById(
+        `comparePrice${prefix}`
+    ).textContent =
+        vehicle.price !== ""
+            ? `${vehicle.price} Lakh`
+            : "—";
+
+    document.getElementById(
+        `compareBattery${prefix}`
+    ).textContent =
+        vehicle.battery !== ""
+            ? `${vehicle.battery} kWh`
+            : "—";
+
+    document.getElementById(
+        `compareRange${prefix}`
+    ).textContent =
+        vehicle.range !== ""
+            ? `${vehicle.range} km`
+            : "—";
+
+    document.getElementById(
+        `comparePower${prefix}`
+    ).textContent =
+        vehicle.power !== ""
+            ? `${vehicle.power} kW`
+            : "—";
+
+    document.getElementById(
+        `compareSpeed${prefix}`
+    ).textContent =
+        vehicle.speed !== ""
+            ? `${vehicle.speed} km/h`
+            : "—";
+}
+
+
+/* ============================================================
+   LOAD 4W VEHICLES
+   ============================================================ */
+
+async function load4WVehicles() {
+
+    const payload =
+        await apiFetch("/vehicles");
+
+    const records =
+        extractRecords(payload);
+
+    vehicles4W =
+        records.map(normalizeVehicle);
+
+    console.log(
+        "4W vehicles loaded:",
+        vehicles4W.length
+    );
+
+    document.getElementById("total4w")
+        .textContent =
+        formatNumber(vehicles4W.length);
+
+    currentVehicleList =
+        vehicles4W.slice();
+
+    populateVehicleSelect();
+    populateComparisonSelects();
+
+    renderLargeVehicleTable();
+}
+
+
+/* ============================================================
+   LOAD 2W / 3W
+   ============================================================ */
+
+async function load2W3W() {
+
+    const payload =
+        await apiFetch("/vehicles-2w-3w");
+
+    const records =
+        extractRecords(payload);
+
+    vehicles2W3W =
+        records.map(normalizeVehicle);
+
+    console.log(
+        "2W/3W vehicles loaded:",
+        vehicles2W3W.length
+    );
+
+    const count2w =
+        vehicles2W3W.filter(
+            v => v.type === "2w"
+        ).length;
+
+    const count3w =
+        vehicles2W3W.filter(
+            v => v.type === "3w"
+        ).length;
+
+    document.getElementById("total2w")
+        .textContent =
+        formatNumber(count2w);
+
+    document.getElementById("total3w")
+        .textContent =
+        formatNumber(count3w);
+
+    renderSmallVehicleTable();
+}
+
+
+/* ============================================================
+   LOAD ADOPTION
+   ============================================================ */
+
+async function loadAdoption() {
+
+    try {
+
+        const payload =
+            await apiFetch("/ev-adoption");
+
+        adoptionData =
+            extractRecords(payload);
+
+        console.log(
+            "Adoption records:",
+            adoptionData.length
+        );
+
+        renderAdoptionTable();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Adoption endpoint error:",
+            error
+        );
+
+        adoptionData = [];
+        renderAdoptionTable();
+    }
+
+
+    try {
+
+        const summary =
+            await apiFetch(
+                "/ev-adoption/summary"
+            );
+
+        summaryData = summary || {};
+
+        console.log(
+            "Adoption summary:",
+            summaryData
+        );
+
+        updateSummary();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Adoption summary error:",
+            error
+        );
+    }
+}
+
+
+/* ============================================================
+   SUMMARY
+   ============================================================ */
+
+function updateSummary() {
+
+    const stateCount =
+        firstValue(
+            summaryData,
+            [
+                "states",
+                "state_count",
+                "states_count",
+                "unique_states",
+                "total_states",
+                "regions",
+                "region_count"
+            ],
+            ""
+        );
+
+    if (stateCount !== "") {
+
+        document.getElementById(
+            "totalStates"
+        ).textContent =
+            formatNumber(stateCount);
+
+        return;
+    }
+
+    /* Try to calculate from adoption records */
+
+    if (adoptionData.length > 0) {
+
+        const possibleStateKeys = [
+            "state_ut",
+            "state",
+            "State",
+            "state_name",
+            "State_Name",
+            "region",
+            "Region"
+        ];
+
+        const values = [];
+
+        adoptionData.forEach(row => {
+
+            const value =
+                firstValue(
+                    row,
+                    possibleStateKeys,
+                    ""
+                );
+
+            if (value !== "") {
+                values.push(String(value));
+            }
+        });
+
+        const unique =
+            [...new Set(values)];
+
+        document.getElementById(
+            "totalStates"
+        ).textContent =
+            formatNumber(unique.length);
+    }
+    else {
+        document.getElementById(
+            "totalStates"
+        ).textContent = "—";
+    }
+
+
+    const totalRecords =
+        firstValue(
+            summaryData,
+            [
+                "total_records",
+                "records",
+                "count",
+                "total"
+            ],
+            ""
+        );
+
+    document.getElementById(
+        "adoptionRecords"
+    ).textContent =
+        totalRecords !== ""
+            ? formatNumber(totalRecords)
+            : formatNumber(adoptionData.length);
+
+
+    const latestYear =
+        firstValue(
+            summaryData,
+            [
+                "latest_year",
+                "year",
+                "max_year"
+            ],
+            ""
+        );
+
+    document.getElementById(
+        "adoptionYear"
+    ).textContent =
+        latestYear || "—";
+}
+
+
+/* ============================================================
+   SMALL VEHICLE TABLE
+   ============================================================ */
+
+function renderSmallVehicleTable() {
+
+    const table =
+        document.getElementById(
+            "smallVehicleTable"
+        );
+
+    const search =
+        document.getElementById(
+            "smallVehicleSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+    const type =
+        document.getElementById(
+            "smallVehicleType"
+        ).value;
+
+
+    const filtered =
+        vehicles2W3W.filter(vehicle => {
+
+            const matchesType =
+                type === "all" ||
+                vehicle.type === type;
+
+            const searchable =
+                [
+                    vehicle.brand,
+                    vehicle.model,
+                    vehicle.variant,
+                    vehicle.typeLabel,
+                    vehicle.source
+                ]
+                .join(" ")
+                .toLowerCase();
+
+            const matchesSearch =
+                !search ||
+                searchable.includes(search);
+
+            return matchesType &&
+                   matchesSearch;
+        });
+
+
+    document.getElementById(
+        "smallVehicleCount"
+    ).textContent =
+        `${filtered.length.toLocaleString("en-IN")} records`;
+
+
+    if (filtered.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="10" class="empty">
+                    No matching vehicles found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        filtered.map(vehicle => `
+            <tr>
+
+                <td>
+                    <span class="badge">
+                        ${escapeHtml(vehicle.typeLabel)}
+                    </span>
+                </td>
+
+                <td>
+                    ${escapeHtml(vehicle.brand || "—")}
+                </td>
+
+                <td>
+                    ${escapeHtml(vehicle.model || "—")}
+                </td>
+
+                <td>
+                    ${escapeHtml(vehicle.variant || "—")}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.price !== ""
+                            ? vehicle.price
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.battery !== ""
+                            ? vehicle.battery
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.range !== ""
+                            ? vehicle.range
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.power !== ""
+                            ? vehicle.power
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.speed !== ""
+                            ? vehicle.speed
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.source || "—"
+                    )}
+                </td>
+
+            </tr>
+        `)
+        .join("");
+}
+
+
+/* ============================================================
+   LARGE VEHICLE TABLE
+   ============================================================ */
+
+function renderLargeVehicleTable() {
+
+    const table =
+        document.getElementById(
+            "largeVehicleTable"
+        );
+
+    const search =
+        document.getElementById(
+            "largeVehicleSearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+    const limit =
+        Number(
+            document.getElementById(
+                "largeVehicleLimit"
+            ).value
+        ) || 50;
+
+
+    const filtered =
+        vehicles4W.filter(vehicle => {
+
+            const searchable =
+                [
+                    vehicle.brand,
+                    vehicle.model,
+                    vehicle.variant,
+                    vehicle.typeLabel
+                ]
+                .join(" ")
+                .toLowerCase();
+
+            return (
+                !search ||
+                searchable.includes(search)
+            );
+        });
+
+
+    const visible =
+        filtered.slice(0, limit);
+
+
+    document.getElementById(
+        "largeVehicleCount"
+    ).textContent =
+        `${filtered.length.toLocaleString("en-IN")} matching records • showing ${visible.length.toLocaleString("en-IN")}`;
+
+
+    if (visible.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty">
+                    No matching vehicles found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        visible.map(vehicle => `
+            <tr>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.brand || "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.model || "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.variant || "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.price !== ""
+                            ? vehicle.price
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.battery !== ""
+                            ? vehicle.battery
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.range !== ""
+                            ? vehicle.range
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.power !== ""
+                            ? vehicle.power
+                            : "—"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        vehicle.speed !== ""
+                            ? vehicle.speed
+                            : "—"
+                    )}
+                </td>
+
+            </tr>
+        `)
+        .join("");
+}
+
+
+/* ============================================================
+   ADOPTION TABLE
+   ============================================================ */
+
+function renderAdoptionTable() {
+
+    const head =
+        document.getElementById(
+            "adoptionHead"
+        );
+
+    const table =
+        document.getElementById(
+            "adoptionTable"
+        );
+
+
+    if (!adoptionData.length) {
+
+        head.innerHTML = "";
+
+        table.innerHTML = `
+            <tr>
+                <td class="empty">
+                    No adoption records available.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById(
+            "adoptionRecords"
+        ).textContent = "0";
+
+        document.getElementById(
+            "adoptionRegions"
+        ).textContent = "—";
+
+        return;
+    }
+
+
+    const keys =
+        Object.keys(
+            adoptionData[0]
+        ).slice(0, 8);
+
+
+    head.innerHTML = `
+        <tr>
+            ${keys.map(
+                key =>
+                    `<th>${escapeHtml(key)}</th>`
+            ).join("")}
+        </tr>
+    `;
+
+
+    table.innerHTML =
+        adoptionData
+            .slice(0, 100)
+            .map(row => `
+                <tr>
+                    ${keys.map(key => `
+                        <td>
+                            ${escapeHtml(
+                                row[key] ?? "—"
+                            )}
+                        </td>
+                    `).join("")}
+                </tr>
+            `)
+            .join("");
+
+
+    document.getElementById(
+        "adoptionRecords"
+    ).textContent =
+        formatNumber(
+            adoptionData.length
+        );
+
+
+    const regionKeys = [
+        "state",
+        "State",
+        "state_name",
+        "State_Name",
+        "region",
+        "Region"
+    ];
+
+    const regions = [];
+
+    adoptionData.forEach(row => {
+
+        const region =
+            firstValue(
+                row,
+                regionKeys,
+                ""
+            );
+
+        if (region !== "") {
+            regions.push(
+                String(region)
+            );
+        }
+    });
+
+    document.getElementById(
+        "adoptionRegions"
+    ).textContent =
+        regions.length
+            ? formatNumber(
+                [...new Set(regions)].length
+              )
+            : "—";
+
+
+    const yearKeys = [
+        "year",
+        "Year",
+        "financial_year",
+        "FY",
+        "fiscal_year"
+    ];
+
+    const years = [];
+
+    adoptionData.forEach(row => {
+
+        const year =
+            firstValue(
+                row,
+                yearKeys,
+                ""
+            );
+
+        if (year !== "") {
+            years.push(String(year));
+        }
+    });
+
+    if (years.length) {
+
+        const sorted =
+            years.slice().sort();
+
+        document.getElementById(
+            "adoptionYear"
+        ).textContent =
+            sorted[sorted.length - 1];
+    }
+}
+
+
+/* ============================================================
+   PRICE PREDICTION
+   ============================================================ */
+
+async function predictPrice() {
+
+    const brand = document.getElementById("brand").value.trim();
+    const range = document.getElementById("range").value;
+    const power = document.getElementById("power").value;
+    const battery = document.getElementById("battery").value;
+    const result = document.getElementById("predictionResult");
+
+    if (!range || !power || !battery) {
+        result.textContent = "Please enter range, power and battery.";
+        return;
+    }
+
+    const rangeNumber = Number(range);
+    const powerNumber = Number(power);
+    const batteryNumber = Number(battery);
+
+    if (![rangeNumber, powerNumber, batteryNumber].every(Number.isFinite) ||
+        rangeNumber < 0 || powerNumber < 0 || batteryNumber < 0) {
+        result.textContent = "Please enter valid positive numeric values.";
+        return;
+    }
+
+    result.textContent = "Predicting...";
+
+    try {
+        const response = await apiFetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                brand: brand,
+                range: rangeNumber,
+                power: powerNumber,
+                battery: batteryNumber
+            })
+        });
+
+        const predicted = Number(response.predicted_price_lakh_inr);
+
+        if (!Number.isFinite(predicted)) {
+            throw new Error("Invalid prediction returned by API");
+        }
+
+        const source = response.prediction_source === "machine_learning_model"
+            ? "ML model"
+            : "fallback estimator";
+
+        result.innerHTML = `Estimated Price: ₹${predicted.toFixed(2)} Lakh <span style="font-size:13px;color:var(--muted);font-weight:600;">(${source})</span>`;
+
+    } catch (error) {
+        console.error("Price prediction error:", error);
+        result.textContent = "Unable to predict price. Check the Flask terminal.";
+    }
+}
+
+
+/* ============================================================
+   EVENT HANDLERS
+   ============================================================ */
+
+document
+    .getElementById("vehicleType")
+    .addEventListener(
+        "change",
+        function () {
+
+            const value = this.value;
+
+            if (value === "4w") {
+                currentVehicleList =
+                    vehicles4W.slice();
+            }
+            else {
+                currentVehicleList =
+                    vehicles2W3W.filter(
+                        v => v.type === value
+                    );
+            }
+
+            populateVehicleSelect();
+            populateComparisonSelects();
+        }
+    );
+
+
+document
+    .getElementById("vehicleSelect")
+    .addEventListener(
+        "change",
+        function () {
+
+            const index =
+                Number(this.value);
+
+            if (
+                this.value === "" ||
+                !currentVehicleList[index]
+            ) {
+                displayVehicle(null);
+                return;
+            }
+
+            displayVehicle(
+                currentVehicleList[index]
+            );
+        }
+    );
+
+
+document
+    .getElementById("compare1")
+    .addEventListener(
+        "change",
+        function () {
+
+            const index =
+                Number(this.value);
+
+            if (
+                this.value === "" ||
+                !currentVehicleList[index]
+            ) {
+                setComparison(1, null);
+                return;
+            }
+
+            setComparison(
+                1,
+                currentVehicleList[index]
+            );
+        }
+    );
+
+
+document
+    .getElementById("compare2")
+    .addEventListener(
+        "change",
+        function () {
+
+            const index =
+                Number(this.value);
+
+            if (
+                this.value === "" ||
+                !currentVehicleList[index]
+            ) {
+                setComparison(2, null);
+                return;
+            }
+
+            setComparison(
+                2,
+                currentVehicleList[index]
+            );
+        }
+    );
+
+
+document
+    .getElementById("smallVehicleSearch")
+    .addEventListener(
+        "input",
+        renderSmallVehicleTable
+    );
+
+
+document
+    .getElementById("smallVehicleType")
+    .addEventListener(
+        "change",
+        renderSmallVehicleTable
+    );
+
+
+document
+    .getElementById("largeVehicleSearch")
+    .addEventListener(
+        "input",
+        renderLargeVehicleTable
+    );
+
+
+document
+    .getElementById("largeVehicleLimit")
+    .addEventListener(
+        "change",
+        renderLargeVehicleTable
+    );
+
+
+/* ============================================================
+   INITIALIZE
+   ============================================================ */
+
+async function initialize() {
+
+    hideAlert();
+
+    try {
+
+        /*
+         * First check that Flask is alive.
+         */
+
+        await apiFetch("/status");
+
+        setConnected();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Flask connection failed:",
+            error
+        );
+
+        setConnectionError(
+            "Flask API connection failed"
+        );
+
+        showAlert(
+            "Cannot connect to Flask on port 5050. Make sure python backend/app.py is running."
+        );
+
+        return;
+    }
+
+
+    /*
+     * Load datasets independently.
+     *
+     * This is important:
+     * If one endpoint has a problem, the whole
+     * dashboard does NOT become blank.
+     */
+
+    const results =
+        await Promise.allSettled([
+            load4WVehicles(),
+            load2W3W(),
+            loadAdoption()
+        ]);
+
+
+    let failed = false;
+
+    results.forEach(
+        (result, index) => {
+
+            if (
+                result.status === "rejected"
+            ) {
+
+                failed = true;
+
+                console.error(
+                    "Dashboard data error:",
+                    index,
+                    result.reason
+                );
+            }
+        }
+    );
+
+
+    if (failed) {
+
+        showAlert(
+            "Some dashboard data could not be loaded. Check the browser console for details."
+        );
+    }
+    else {
+
+        hideAlert();
+    }
+}
+
+
+/*
+ * Start dashboard.
+ */
+
+initialize();
+
+</script>
+
+</body>
+</html>

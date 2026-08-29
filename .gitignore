@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+backend/app_backup.py
+backend/app_backup.py

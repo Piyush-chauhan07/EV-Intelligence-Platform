@@ -1,0 +1,24 @@
+vehicle_type,brand,model,variant,price_lakh_inr,battery_kwh,range_km,power_kw,top_speed_kmph,source_type
+2-Wheeler,TVS,iQube,2.3 kWh,0.95124,2.3,114,,68,Manufacturer
+2-Wheeler,TVS,iQube,3.1 kWh,1.04962,3.1,123,,82,Manufacturer
+2-Wheeler,TVS,iQube,3.5 kWh,1.102,3.5,145,,82,Manufacturer
+2-Wheeler,TVS,iQube S,4.7 kWh,1.3034,4.7,175,,82,Manufacturer
+2-Wheeler,TVS,iQube ST,5.3 kWh,1.46877,5.3,212,,82,Manufacturer
+2-Wheeler,Ather,Rizta S,Standard,1.21499,2.7,123,4.3,80,Manufacturer
+2-Wheeler,Ather,Rizta S,Long Range,1.21499,3.5,161,4.3,80,Manufacturer
+2-Wheeler,Ather,Rizta Z,Standard,1.36999,2.7,123,4.3,80,Manufacturer
+2-Wheeler,Ather,Rizta Z,Long Range,1.36999,3.5,161,4.3,80,Manufacturer
+2-Wheeler,Bajaj,Chetak C25,C25,0.91399,2.5,113,,60,Manufacturer
+2-Wheeler,Bajaj,Chetak C3001,C3001,0.9999,3.0,127,,,Manufacturer
+2-Wheeler,Ola Electric,S1 Pro,4 kWh,1.39999,4.0,,,,Manufacturer
+2-Wheeler,Ola Electric,S1 Pro,3 kWh,1.19999,3.0,,,,Manufacturer
+2-Wheeler,Ola Electric,S1 Pro+,5.2 kWh,1.85338,5.2,320,13,130,Manufacturer
+2-Wheeler,Ola Electric,Roadster X,4.5 kWh,0.94999,4.5,252,,,Manufacturer
+3-Wheeler,Bajaj,Riki P4005,Passenger,1.853,5.4,149,,25,Manufacturer
+3-Wheeler,Bajaj,Riki C4005,Cargo,3.10797,5.4,164,,,Manufacturer
+3-Wheeler,Mahindra,Treo Plus,Passenger,3.58,10.24,167,8,,Manufacturer
+3-Wheeler,Mahindra,Treo Zor,Cargo,2.73,,,8,,Manufacturer
+3-Wheeler,Piaggio,Apé E-City FX Max,Passenger,,8.6,160,7.4,,Manufacturer
+3-Wheeler,Piaggio,Apé E-City Ultra,Passenger,,9.5,205,9.5,,Manufacturer
+3-Wheeler,Piaggio,Apé E-City SwaP,Passenger,,6.26,120,7.4,,Manufacturer
+3-Wheeler,Euler Motors,HiLoad EV,Cargo,,12.6,170,9,,Manufacturer

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>EV Intelligence Platform</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at top left, #164e63, transparent 35%),
+            linear-gradient(135deg, #020617, #0f172a, #172554);
+        color: white;
+        padding: 35px 20px;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        color: #94a3b8;
+        font-size: 18px;
+    }
+
+    .nav {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .nav a {
+        display: inline-block;
+        color: #38bdf8;
+        text-decoration: none;
+        padding: 10px 18px;
+        border: 1px solid #155e75;
+        border-radius: 10px;
+        margin: 5px;
+    }
+
+    .nav a:hover {
+        background: #0c4a6e;
+    }
+
+    .card {
+        background: rgba(15, 23, 42, 0.94);
+        border-radius: 20px;
+        padding: 32px;
+        border: 1px solid #334155;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .section-title {
+        font-size: 22px;
+        margin-bottom: 20px;
+        color: #e2e8f0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 8px;
+        color: #cbd5e1;
+        font-weight: bold;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid #475569;
+        background: #020617;
+        color: white;
+        font-size: 16px;
+        outline: none;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+    }
+
+    input:disabled,
+    select:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
+    .spec-section {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #334155;
+    }
+
+    .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .spec {
+        background: #020617;
+        border: 1px solid #1e293b;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .spec-label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 7px;
+    }
+
+    .spec-value {
+        color: #e2e8f0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .button-container {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    button {
+        background: linear-gradient(135deg, #0284c7, #0ea5e9);
+        color: white;
+        border: none;
+        padding: 15px 50px;
+        border-radius: 10px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg, #0369a1, #0284c7);
+    }
+
+    button:disabled {
+        background: #475569;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .result {
+        display: none;
+        margin-top: 30px;
+        text-align: center;
+        padding: 28px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #082f49, #0f172a);
+        border: 1px solid #0e7490;
+    }
+
+    .result h2 {
+        color: #94a3b8;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .price {
+        font-size: 44px;
+        font-weight: bold;
+        color: #38bdf8;
+    }
+
+    .error {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        background: #450a0a;
+        border: 1px solid #7f1d1d;
+        color: #fecaca;
+        text-align: center;
+    }
+
+    .loading {
+        color: #38bdf8;
+        margin-top: 15px;
+        text-align: center;
+        display: none;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .spec-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .header h1 {
+            font-size: 32px;
+        }
+
+        .card {
+            padding: 22px;
+        }
+    }
+
+    @media (max-width: 450px) {
+
+        .spec-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<div class="header">
+
+    <h1>⚡ EV Intelligence Platform</h1>
+
+    <p>
+        Indian Electric Vehicle Price Prediction & Vehicle Intelligence
+    </p>
+
+</div>
+
+
+<div class="nav">
+
+    <a href="dashboard.html">
+        📊 EV Adoption Dashboard
+    </a>
+
+</div>
+
+
+<div class="card">
+
+    <div class="section-title">
+        🚗 Select Your Electric Vehicle
+    </div>
+
+
+    <div class="form-grid">
+
+        <!-- BRAND -->
+
+        <div class="form-group">
+
+            <label for="brand">
+                Brand
+            </label>
+
+            <select id="brand" onchange="loadModels()">
+
+                <option value="">
+                    Loading brands...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MODEL -->
+
+        <div class="form-group">
+
+            <label for="model">
+                Model
+            </label>
+
+            <select id="model" onchange="loadVehicleDetails()" disabled>
+
+                <option value="">
+                    Select brand first
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- VARIANT -->
+
+        <div class="form-group">
+
+            <label for="variant">
+                Variant
+            </label>
+
+            <input
+                type="text"
+                id="variant"
+                placeholder="Automatically loaded"
+                readonly
+            >
+
+        </div>
+
+
+        <!-- RANGE -->
+
+        <div class="form-group">
+
+            <label for="range">
+                Driving Range (km)
+            </label>
+
+            <input
+                type="number"
+                id="range"
+                placeholder="Automatically loaded"
+            >
+
+        </div>
+
+
+        <!-- POWER -->
+
+        <div class="form-group">
+
+            <label for="power">
+                Motor Power (kW)
+            </label>
+
+            <input
+                type="number"
+                id="power"
+                placeholder="Automatically loaded"
+            >
+
+        </div>
+
+
+        <!-- BATTERY -->
+
+        <div class="form-group">
+
+            <label for="battery">
+                Battery Capacity (kWh)
+            </label>
+
+            <input
+                type="number"
+                id="battery"
+                placeholder="Automatically loaded"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- VEHICLE SPECS -->
+
+    <div class="spec-section">
+
+        <div class="section-title">
+            🔋 Vehicle Specifications
+        </div>
+
+        <div class="spec-grid">
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Manufacturer
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specMake"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Model
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specModel"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Variant
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specVariant"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Battery
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specBattery"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Motor Power
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specPower"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    ARAI Range
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specArai"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Real World Range
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specRealRange"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Vehicle Weight
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specWeight"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="spec">
+
+                <div class="spec-label">
+                    Dataset Price
+                </div>
+
+                <div
+                    class="spec-value"
+                    id="specPrice"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="loading"
+        id="loading"
+    >
+        Loading vehicle information...
+    </div>
+
+
+    <div class="button-container">
+
+        <button
+            id="predictButton"
+            onclick="predictPrice()"
+            disabled
+        >
+            Predict Price
+        </button>
+
+    </div>
+
+
+    <div
+        id="error"
+        class="error"
+    ></div>
+
+
+    <div
+        id="result"
+        class="result"
+    >
+
+        <h2>
+            ML Estimated EV Price
+        </h2>
+
+        <div
+            class="price"
+            id="price"
+        >
+            ₹0.00 Lakh
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="footer">
+
+    Machine Learning powered • Random Forest •
+    7,292 Vehicle Records
+
+</div>
+```
+
+</div>
+
+<script>
+
+const API_URL = "http://127.0.0.1:5000";
+
+
+// ============================================================
+// LOAD BRANDS
+// ============================================================
+
+async function loadBrands() {
+
+    const brandSelect = document.getElementById("brand");
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/vehicles`
+        );
+
+        if (!response.ok) {
+            throw new Error("Could not load brands");
+        }
+
+        const data = await response.json();
+
+        brandSelect.innerHTML =
+            '<option value="">Select a brand</option>';
+
+        data.makes.forEach(make => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = make;
+            option.textContent = make;
+
+            brandSelect.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        brandSelect.innerHTML =
+            '<option value="">Unable to load brands</option>';
+
+        showError(
+            "Could not connect to Flask. Make sure the backend is running on port 5000."
+        );
+    }
+}
+
+
+// ============================================================
+// LOAD MODELS
+// ============================================================
+
+async function loadModels() {
+
+    const brand =
+        document.getElementById("brand").value;
+
+    const modelSelect =
+        document.getElementById("model");
+
+    resetVehicleDetails();
+
+    if (!brand) {
+
+        modelSelect.innerHTML =
+            '<option value="">Select brand first</option>';
+
+        modelSelect.disabled = true;
+
+        return;
+    }
+
+    modelSelect.disabled = true;
+
+    modelSelect.innerHTML =
+        '<option value="">Loading models...</option>';
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/vehicles/${encodeURIComponent(brand)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Could not load models");
+        }
+
+        const data = await response.json();
+
+        modelSelect.innerHTML =
+            '<option value="">Select a model</option>';
+
+        data.models.forEach(model => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = model;
+            option.textContent = model;
+
+            modelSelect.appendChild(option);
+
+        });
+
+        modelSelect.disabled = false;
+
+    } catch (error) {
+
+        console.error(error);
+
+        modelSelect.innerHTML =
+            '<option value="">Unable to load models</option>';
+
+        showError(
+            "Could not load models for this brand."
+        );
+    }
+}
+
+
+// ============================================================
+// LOAD VEHICLE DETAILS
+// ============================================================
+
+async function loadVehicleDetails() {
+
+    const brand =
+        document.getElementById("brand").value;
+
+    const model =
+        document.getElementById("model").value;
+
+    if (!brand || !model) {
+        return;
+    }
+
+    const loading =
+        document.getElementById("loading");
+
+    loading.style.display = "block";
+
+    hideError();
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/vehicle/${encodeURIComponent(brand)}/${encodeURIComponent(model)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Vehicle not found");
+        }
+
+        const data = await response.json();
+
+        // Input fields
+
+        document.getElementById("variant").value =
+            data.variant ?? "";
+
+        document.getElementById("range").value =
+            data.real_world_range_km ??
+            data.ARAI_certified_range_km ??
+            "";
+
+        document.getElementById("power").value =
+            data.motor_power_kW ?? "";
+
+        document.getElementById("battery").value =
+            data.battery_capacity_kWh ?? "";
+
+
+        // Specification cards
+
+        document.getElementById("specMake").textContent =
+            data.make ?? "—";
+
+        document.getElementById("specModel").textContent =
+            data.model ?? "—";
+
+        document.getElementById("specVariant").textContent =
+            data.variant ?? "—";
+
+        document.getElementById("specBattery").textContent =
+            data.battery_capacity_kWh != null
+                ? `${Number(data.battery_capacity_kWh).toFixed(1)} kWh`
+                : "—";
+
+        document.getElementById("specPower").textContent =
+            data.motor_power_kW != null
+                ? `${Number(data.motor_power_kW).toFixed(1)} kW`
+                : "—";
+
+        document.getElementById("specArai").textContent =
+            data.ARAI_certified_range_km != null
+                ? `${Number(data.ARAI_certified_range_km).toFixed(0)} km`
+                : "—";
+
+        document.getElementById("specRealRange").textContent =
+            data.real_world_range_km != null
+                ? `${Number(data.real_world_range_km).toFixed(0)} km`
+                : "—";
+
+        document.getElementById("specWeight").textContent =
+            data.vehicle_weight_kg != null
+                ? `${Number(data.vehicle_weight_kg).toFixed(0)} kg`
+                : "—";
+
+        document.getElementById("specPrice").textContent =
+            data.price_lakh_INR != null
+                ? `₹${Number(data.price_lakh_INR).toFixed(2)} Lakh`
+                : "—";
+
+
+        document.getElementById("predictButton").disabled =
+            !data.real_world_range_km ||
+            !data.motor_power_kW ||
+            !data.battery_capacity_kWh;
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Could not load the specifications for this vehicle."
+        );
+
+    } finally {
+
+        loading.style.display = "none";
+    }
+}
+
+
+// ============================================================
+// PREDICT PRICE
+// ============================================================
+
+async function predictPrice() {
+
+    const button =
+        document.getElementById("predictButton");
+
+    const result =
+        document.getElementById("result");
+
+    const error =
+        document.getElementById("error");
+
+
+    const brand =
+        document.getElementById("brand").value;
+
+    const model =
+        document.getElementById("model").value;
+
+    const range =
+        Number(document.getElementById("range").value);
+
+    const power =
+        Number(document.getElementById("power").value);
+
+    const battery =
+        Number(document.getElementById("battery").value);
+
+
+    hideError();
+
+    result.style.display = "none";
+
+
+    if (
+        !brand ||
+        !model ||
+        !range ||
+        !power ||
+        !battery
+    ) {
+
+        showError(
+            "Please select a vehicle first."
+        );
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "Predicting...";
+
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/predict`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    brand: brand,
+
+                    model: model,
+
+                    range: range,
+
+                    power: power,
+
+                    battery: battery
+
+                })
+            }
+        );
+
+
+        if (!response.ok) {
+
+            const errorData =
+                await response.json();
+
+            throw new Error(
+                errorData.error ||
+                "Prediction failed"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        document.getElementById("price").textContent =
+            `₹${Number(data.predicted_price_lakh).toFixed(2)} Lakh`;
+
+
+        result.style.display = "block";
+
+
+    } catch (err) {
+
+        console.error(err);
+
+        showError(
+            "Could not connect to the prediction server. Make sure Flask is running on port 5000."
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Predict Price";
+    }
+}
+
+
+// ============================================================
+// RESET VEHICLE DETAILS
+// ============================================================
+
+function resetVehicleDetails() {
+
+    document.getElementById("variant").value = "";
+
+    document.getElementById("range").value = "";
+
+    document.getElementById("power").value = "";
+
+    document.getElementById("battery").value = "";
+
+
+    document.getElementById("specMake").textContent = "—";
+
+    document.getElementById("specModel").textContent = "—";
+
+    document.getElementById("specVariant").textContent = "—";
+
+    document.getElementById("specBattery").textContent = "—";
+
+    document.getElementById("specPower").textContent = "—";
+
+    document.getElementById("specArai").textContent = "—";
+
+    document.getElementById("specRealRange").textContent = "—";
+
+    document.getElementById("specWeight").textContent = "—";
+
+    document.getElementById("specPrice").textContent = "—";
+
+
+    document.getElementById("predictButton").disabled = true;
+
+    document.getElementById("result").style.display = "none";
+}
+
+
+// ============================================================
+// ERROR HANDLING
+// ============================================================
+
+function showError(message) {
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent = message;
+
+    error.style.display = "block";
+}
+
+
+function hideError() {
+
+    document.getElementById("error").style.display =
+        "none";
+}
+
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+loadBrands();
+
+</script>
+
+</body>
+</html>
